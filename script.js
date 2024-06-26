@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const apiKey = 'AIzaSyD5w0aoW9GUPlLGc0t4tUCcmcM_-VvbPgg';
+    const apiKey = ${{ secrets.YOUTUBE_API_KEY }};
     const channelsUrl = 'channels.json';
     const channelList = document.getElementById('channel-list');
 
@@ -24,10 +24,10 @@ document.addEventListener("DOMContentLoaded", function() {
                     const channelDiv = document.createElement('div');
                     channelDiv.className = 'channel';
                     channelDiv.innerHTML = `
-                        <h2>${title}</h2>
                         <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank">
                             <img src="${thumbnail}" alt="${title}">
                         </a>
+                        <h3>${title}</h3>
                     `;
 
                     channelList.appendChild(channelDiv);
