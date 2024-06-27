@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const channelsUrl = 'channels.json';
     const channelList = document.getElementById('channel-list');
     const apiKeyInput = document.getElementById('api-key');
+    const saveButton = document.getElementById('save-api-key');
 
     const apiKey = getCookie('youtubeApiKey');
     if (apiKey) {
@@ -9,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
         fetchChannels(apiKey);
     }
 
-    document.querySelector('button').addEventListener('click', function() {
+    saveButton.addEventListener('click', function() {
         const apiKey = apiKeyInput.value.trim();
         if (apiKey) {
             setCookie('youtubeApiKey', apiKey, 365);
@@ -18,6 +19,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     function fetchChannels(apiKey) {
+        channelList.innerHTML = '';
         fetch(channelsUrl)
             .then(response => response.json())
             .then(channelIds => {
