@@ -8,6 +8,11 @@ h1 {
     text-align: center;
 }
 
+div {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
 #channel-list {
     display: flex;
     flex-wrap: wrap;
@@ -27,4 +32,25 @@ h1 {
 .channel img {
     max-width: 100%;
     height: auto;
+}
+
+input[type="text"] {
+    padding: 8px;
+    margin-right: 10px;
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    padding: 8px 16px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
 }
