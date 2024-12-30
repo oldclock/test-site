@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>YouTube Subscriptions</title>
+</head>
+<body>
+  <h1>List My YouTube Subscriptions</h1>
+
+  <!-- Button to sign in -->
+  <button id="authorize_button">Sign In</button>
+  <!-- Button to sign out -->
+  <button id="signout_button" style="display: none;">Sign Out</button>
+
+  <div id="subscriptions"></div>
+
+  <!-- Load the Google API client library -->
+  <script src="https://apis.google.com/js/api.js"></script>
+  <script>
+    /************************************************
+     * 1) Specify your OAuth 2.0 credentials
+     ************************************************/
+    const CLIENT_ID = 'YOUR_OAUTH_CLIENT_ID.apps.googleusercontent.com'; // from Google Cloud
+    // We only need the read-only scope for subscriptions
+    const SCOPES = 'https://www.googleapis.com/auth/youtube.readonly';
+
+    // HTML elements
+    const authorizeButton = document.getElementById('authorize_button');
+    const signoutButton = document.getElementById('signout_button');
+    const subscriptionsDiv = document.getElementById('subscriptions');
+
+    /************************************************
+     * 2) Initialize the client library
+     ************************************************/
+    function initClient() {
+      gapi.client.init({
+        // Optionally, you can include your API key if you’d like
+        apiKey: 'YOUR_API_KEY', // not strictly required for user data
+        clientId: CLIENT_ID,
+        discoveryDocs: [
+          'https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest'
+        ],
+        scope: SCOPES
+      }).then(() => {
+        // Listen for sign-in state changes.
+        gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+
+        // Handle the initial sign-in state.
+        updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+
+        authorizeButton.onclick = handleAuthClick;
+        signoutButton.onclick = handleSignoutClick;
+      }, error => {
+        console.error('Error initializing GAPI client', error);
+      });
+    }
+
+    /************************************************
+     * 3) Load the API client and auth2 library
+     ************************************************/
+    gapi.load('client:auth2', initClient);
+
+    /************************************************
+     * 4) React to sign-in state changes
+     ************************************************/
+    function updateSigninStatus(isSignedIn) {
+      if (isSignedIn) {
+        authorizeButton.style.display = 'none';
+        signoutButton.style.display = 'inline-block';
+        listSubscriptions();
+      } else {
+        authorizeButton.style.display = 'inline-block';
+        signoutButton.style.display = 'none';
+        subscriptionsDiv.innerHTML = '';
+      }
+    }
+
+    /************************************************
+     * 5) Sign in & Sign out button handlers
+     ************************************************/
+    function handleAuthClick() {
+      gapi.auth2.getAuthInstance().signIn();
+    }
+
+    function handleSignoutClick() {
+      gapi.auth2.getAuthInstance().signOut();
+    }
+
+    /************************************************
+     * 6) List subscriptions for the signed-in user
+     ************************************************/
+    function listSubscriptions(pageToken = null) {
+      gapi.client.youtube.subscriptions.list({
+        part: 'snippet',
+        mine: true,
+        maxResults: 50,         // max allowed per request
+        pageToken: pageToken,   // for pagination
+      }).then(response => {
+        const { items, nextPageToken } = response.result;
+
+        // Display the fetched subscriptions
+        renderSubscriptions(items);
+
+        // If there's more data, recursively fetch more
+        if (nextPageToken) {
+          listSubscriptions(nextPageToken);
+        }
+      }, err => {
+        console.error('Error fetching subscriptions:', err);
+        subscriptionsDiv.innerHTML = '<p>Error fetching subscriptions. Check console for details.</p>';
+      });
+    }
+
+    /************************************************
+     * 7) Render subscription data
+     ************************************************/
+    function renderSubscriptions(subscriptions) {
+      subscriptions.forEach(sub => {
+        const channelTitle = sub.snippet.title;
+        const channelId = sub.snippet.resourceId.channelId;
+        const thumbnailUrl = sub.snippet.thumbnails?.default?.url;
+
+        const channelDiv = document.createElement('div');
+        channelDiv.style.marginBottom = '10px';
+
+        channelDiv.innerHTML = `
+          <img src="${thumbnailUrl}" alt="channel thumbnail" />
+          <strong>${channelTitle}</strong>
+          <small>(Channel ID: ${channelId})</small>
+        `;
+
+        subscriptionsDiv.appendChild(channelDiv);
+      });
+    }
+  </script>
+</body>
+</html>
