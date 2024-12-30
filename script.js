@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Fetch keywords from keywords.json
   await loadKeywords();
-  console.log('Loaded keywords:', keywords); // <-- See what the array actually is
+  // console.log('Loaded keywords:', keywords); // <-- See what the array actually is
 
   // Now fetch and display live streams using the stored (or blank) API key
   fetchLiveStreams(storedApiKey);
@@ -102,10 +102,10 @@ async function getLiveVideoForChannel(apiKey, channelId) {
         const titleLC = videoTitle.toLowerCase();
         const matchesKeyword = keywords.some(kw => titleLC.includes(kw));
 
-        console.log('Video title:', snippet.title);
-        console.log('Lowercase title:', titleLC);
-        console.log('Keywords:', keywords);
-        console.log('Does it match any keyword?', matchesKeyword);
+        // console.log('Video title:', snippet.title);
+        // console.log('Lowercase title:', titleLC);
+        // console.log('Keywords:', keywords);
+        // console.log('Does it match any keyword?', matchesKeyword);
 
         if (!matchesKeyword) {
           return; // Skip this video if it doesn't match any keyword
