@@ -100,9 +100,9 @@ async function getLiveVideoForChannel(apiKey, channelId) {
         // Keyword filter check
         const titleLC = videoTitle.toLowerCase();
         const matchesKeyword = keywords.some(kw => titleLC.includes(kw));
-        if (!matchesKeyword) {
-          return; // Skip this video if it doesn't match any keyword
-        }
+        // if (!matchesKeyword) {
+        //   return; // Skip this video if it doesn't match any keyword
+        // }
 
         // If it passes the filter, create the HTML element
         const videoEl = document.createElement('div');
