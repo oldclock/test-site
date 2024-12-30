@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Live Tracker</title>
-    <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <title>Live Streams</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <h1>YouTube Live Tracker</h1>
-    <div>
-        <label for="api-key">YouTube API Key:</label>
-        <input type="text" id="api-key" placeholder="Enter your API key">
-        <button id="save-api-key">Save API Key</button>
-    </div>
-    <div id="channel-list"></div>
-    <script src="script.js"></script>
+  <h1>Currently Live on YouTube</h1>
+
+  <!-- Input to store or update the YouTube API key in a cookie -->
+  <div class="api-key-input">
+    <label for="apiKey">Enter YouTube API key:</label>
+    <input type="text" id="apiKey" placeholder="Your API key" />
+    <button id="saveKeyBtn">Save Key</button>
+  </div>
+
+  <!-- Container to list the live videos -->
+  <div id="videosContainer"></div>
+
+  <script src="script.js"></script>
 </body>
 </html>
+
