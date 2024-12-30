@@ -1,13 +1,13 @@
 // script.js
 
 // Get references to DOM elements
-//const apiKeyInput = document.getElementById('apiKey');
+const apiKeyInput = document.getElementById('apiKey');
 const saveKeyBtn = document.getElementById('saveKeyBtn');
 const videosContainer = document.getElementById('videosContainer');
 
 // On page load, read the stored API key from cookies
 document.addEventListener('DOMContentLoaded', () => {
-  const apiKeyInput = document.getElementById('apiKey');
+  //apiKeyInput = document.getElementById('apiKey');
   const storedApiKey = getCookieValue('youtubeApiKey');
   if (storedApiKey) {
     apiKeyInput.value = storedApiKey;
