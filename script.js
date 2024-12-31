@@ -62,13 +62,15 @@ async function fetchLiveStreams(apiKey) {
   try {
     // Load channel IDs from channels.json
     const res = await fetch('channels.json');
-    const channelIds = await res.json();
+    //const channelIds = await res.json();
+    const channels = await res.json();
 
     // Clear the container
     videosContainer.innerHTML = '';
 
     // For each channel, call YouTube API to check if there's a live stream
-    for (const channelId of channelIds) {
+    for (const channelObj of channels) {
+      const { channelId, comment } = channelObj;
       await getLiveVideoForChannel(apiKey, channelId);
     }
   } catch (error) {
