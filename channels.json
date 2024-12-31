@@ -1,30 +1,86 @@
 [
     {
+        "comment": "HACHI",
+        "channelId": "UC7XCjKxBEct0uAukpQXNFPw"
+    },
+    {
+        "comment": "Enna Alouette【NIJISANJI EN】",
+        "channelId": "UCR6qhsLpn62WVxCBK1dkLow"
+    },
+    {
+        "comment": "Elizabeth Rose Bloodflame Ch. hololive-EN",
+        "channelId": "UCW5uhrG1eCBYditmhL0Ykjw"
+    },
+    {
+        "comment": "獅子神レオナ/レオナちゃんねる",
+        "channelId": "UCB1s_IdO-r0nUkY2mXeti-A"
+    },
+    {
+        "comment": "shin",
+        "channelId": "UC5zO6IFsWSUHMYgJMv81XKg"
+    },
+    {
         "comment": "Mori Calliope Ch. hololive-EN",
         "channelId": "UCL_qhgtOy0dy1Agp8vkySQg"
     },
     {
-        "comment": "ReLive_灰妲 DaDa",
-        "channelId": "UCx7GU8C3cr7vqp_SbS-8P-w"
+        "comment": "Vivi Ch. 綺々羅々ヴィヴィ - FLOW GLOW",
+        "channelId": "UCGzTVXqMQHa4AgJVJIVvtDQ"
+    },
+    {
+        "comment": "森森鈴蘭 / Lily Linglan【箱箱The Box所屬】",
+        "channelId": "UC3ZTQ8VZVCpwLHjFKSFe5Uw"
+    },
+    {
+        "comment": "浠Mizuki Channel",
+        "channelId": "UCjv4bfP_67WLuPheS-Z8Ekg"
+    },
+    {
+        "comment": "銀河Galaxy",
+        "channelId": "UCoNKCsX9tSxiuh9jznYxXfw"
+    },
+    {
+        "comment": "梨亞卓恩 / Liadrian",
+        "channelId": "UCaTcioLFOsSQt6sO0ZYDKxQ"
     },
     {
         "comment": "Ellise Ch.",
         "channelId": "UC-ADLXZ3RVOPCGe1ZbuFQeg"
     },
     {
-        "comment": "Muse木棉花-TW",
-        "channelId": "UCgdwtyqBunlRb-i-7PnCssQ"
+        "comment": "稍 麦 - yayamugi -",
+        "channelId": "UCDqno_7LWobowaVc_vzUuCA"
+    },
+    {
+        "comment": "Tacitly Channel",
+        "channelId": "UCEjysNG2a2UgCBIpJxBqn3w"
+    },
+    {
+        "comment": "吉良リリー / Kira Lily",
+        "channelId": "UCeB2goVR4zG7Jqafh_NYyfw"
+    },
+    {
+        "comment": "天満ニア / Amama Nia",
+        "channelId": "UC3KldSym-HTLMkvitStsNTw"
     },
     {
         "comment": "杏夜 くもり - Anya Kumori -",
         "channelId": "UCHnbtVLZYGuKkGh6iFxxTpw"
     },
     {
+        "comment": "aoi sizuku ch. 葵井詩雫",
+        "channelId": "UCWNV-ixuEAxaso9rLk5PRFQ"
+    },
+    {
+        "comment": "ReLive_灰妲 DaDa",
+        "channelId": "UCx7GU8C3cr7vqp_SbS-8P-w"
+    },
+    {
         "comment": "Pool Loop Ch. 波·路譜",
         "channelId": "UC6pOQrqDBllg6Dlr4zQIdig"
     },
     {
-        "comment": "aoi sizuku ch. 葵井詩雫",
-        "channelId": "UCWNV-ixuEAxaso9rLk5PRFQ"
+        "comment": "Muse木棉花-TW",
+        "channelId": "UCgdwtyqBunlRb-i-7PnCssQ"
     }
 ]
