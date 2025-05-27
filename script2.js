@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Modal Logic ---
     function openModal(videoId, videoTitle) {
         videoPlayerTitle.textContent = videoTitle;
+        // Corrected YouTube embed URL
         youtubePlayerContainer.innerHTML = `<iframe class="w-full h-full rounded-md" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
         videoPlayerModal.style.display = "block";
     }
@@ -80,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- YouTube API Fetching ---
+    // --- YouTube API Fetching (Optimized) ---
     async function fetchFromYouTubeAPI(endpoint, params) {
         if (!currentApiKey) {
             showError('API Key is missing. Please enter your YouTube API Key.');
@@ -119,15 +120,51 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    async function getChannelStreams(channelId, eventType) {
-        // eventType can be 'live' or 'upcoming'
-        return await fetchFromYouTubeAPI('search', {
-            part: 'snippet',
-            channelId: channelId,
-            eventType: eventType,
-            type: 'video',
+    // Step 1: Get the "uploads" playlist ID for a channel
+    async function getChannelUploadsPlaylistId(channelId) {
+        const data = await fetchFromYouTubeAPI('channels', {
+            part: 'contentDetails',
+            id: channelId
+        });
+        if (data && data.items && data.items.length > 0) {
+            return data.items[0].contentDetails.relatedPlaylists.uploads;
+        }
+        console.warn(`Could not find uploads playlist for channel ID: ${channelId}`);
+        return null;
+    }
+
+    // Step 2: Get video IDs from a playlist
+    async function getPlaylistVideoIds(playlistId) {
+        const data = await fetchFromYouTubeAPI('playlistItems', {
+            part: 'contentDetails', // Only need videoId from here
+            playlistId: playlistId,
             maxResults: window.YOUTUBE_CONFIG.maxResultsPerChannel || 10
         });
+        if (data && data.items) {
+            return data.items.map(item => item.contentDetails.videoId);
+        }
+        console.warn(`Could not fetch video IDs for playlist ID: ${playlistId}`);
+        return [];
+    }
+
+    // Step 3: Get details for a list of video IDs
+    async function getVideoDetails(videoIds) {
+        if (!videoIds || videoIds.length === 0) return [];
+        
+        let allVideoDetails = [];
+        const batchSize = 50; // Max video IDs per call for videos.list
+
+        for (let i = 0; i < videoIds.length; i += batchSize) {
+            const batch = videoIds.slice(i, i + batchSize);
+            const data = await fetchFromYouTubeAPI('videos', {
+                part: 'snippet,liveStreamingDetails', // Get snippet and live details
+                id: batch.join(',')
+            });
+            if (data && data.items) {
+                allVideoDetails.push(...data.items);
+            }
+        }
+        return allVideoDetails;
     }
 
     async function fetchAllVideos() {
@@ -145,94 +182,109 @@ document.addEventListener('DOMContentLoaded', () => {
 
         loadingIndicator.classList.remove('hidden');
         errorDisplay.classList.add('hidden');
-        videoSectionsContainer.classList.add('hidden'); // Hide while loading
+        videoSectionsContainer.classList.add('hidden');
         clearAllVideoSections();
 
-        let allLiveVideos = [];
-        let allUpcomingVideos = [];
+        let allVideoIdsToFetchDetails = new Set(); // Use Set to avoid duplicate video IDs initially
 
         for (const channelId of window.YOUTUBE_CONFIG.channelIds) {
-            // Fetch live videos
-            const liveData = await getChannelStreams(channelId, 'live');
-            if (liveData && liveData.items) {
-                allLiveVideos.push(...liveData.items);
-            }
-
-            // Fetch upcoming videos
-            const upcomingData = await getChannelStreams(channelId, 'upcoming');
-            if (upcomingData && upcomingData.items) {
-                allUpcomingVideos.push(...upcomingData.items);
+            const uploadsPlaylistId = await getChannelUploadsPlaylistId(channelId);
+            if (uploadsPlaylistId) {
+                const videoIds = await getPlaylistVideoIds(uploadsPlaylistId);
+                videoIds.forEach(id => allVideoIdsToFetchDetails.add(id));
             }
         }
         
-        // Remove duplicates that might arise if a video is fetched multiple times (e.g. from different calls if logic changes)
-        allLiveVideos = removeDuplicateVideos(allLiveVideos);
-        allUpcomingVideos = removeDuplicateVideos(allUpcomingVideos);
+        const uniqueVideoIds = Array.from(allVideoIdsToFetchDetails);
+        if (uniqueVideoIds.length === 0) {
+            console.log("No video IDs found to fetch details for.");
+            loadingIndicator.classList.add('hidden');
+            videoSectionsContainer.classList.remove('hidden'); // Show sections (they will show "no videos" messages)
+            processAndDisplayVideos([]); // Call with empty array to show "no videos" messages
+            return;
+        }
 
-        processAndDisplayVideos(allLiveVideos, allUpcomingVideos);
+        const allVideosWithDetails = await getVideoDetails(uniqueVideoIds);
+        
+        // The API might return videos in a different order or not all if some IDs were invalid
+        // No need to remove duplicates here as getVideoDetails fetches unique IDs
+        
+        processAndDisplayVideos(allVideosWithDetails);
 
         loadingIndicator.classList.add('hidden');
-        videoSectionsContainer.classList.remove('hidden'); // Show after loading
+        videoSectionsContainer.classList.remove('hidden');
     }
     
-    function removeDuplicateVideos(videos) {
-        const seenIds = new Set();
-        return videos.filter(video => {
-            if (seenIds.has(video.id.videoId)) {
-                return false;
-            }
-            seenIds.add(video.id.videoId);
-            return true;
-        });
-    }
-
-
     // --- Video Processing and Display ---
-    function processAndDisplayVideos(liveVideos, upcomingVideos) {
+    function processAndDisplayVideos(allVideos) {
         const keywords = (window.YOUTUBE_CONFIG.keywords || []).map(k => k.toLowerCase());
         const upcomingHours = window.YOUTUBE_CONFIG.upcomingHoursAhead || 48;
         document.getElementById('upcomingHours').textContent = upcomingHours;
         document.querySelectorAll('.upcomingHoursText').forEach(el => el.textContent = upcomingHours);
 
-
-        const keywordMatches = [];
-        const otherLive = [];
-
-        liveVideos.forEach(video => {
-            const title = video.snippet.title.toLowerCase();
-            const description = video.snippet.description.toLowerCase();
-            const isKeywordMatch = keywords.some(keyword => title.includes(keyword) || description.includes(keyword));
-
-            if (isKeywordMatch) {
-                keywordMatches.push(video);
-            } else {
-                otherLive.push(video);
-            }
-        });
+        const liveKeywordMatches = [];
+        const otherLiveStreams = [];
+        const upcomingStreams = [];
 
         const now = new Date();
         const upcomingCutoff = new Date(now.getTime() + upcomingHours * 60 * 60 * 1000);
 
-        const relevantUpcoming = upcomingVideos.filter(video => {
-            const scheduledTime = new Date(video.snippet.publishTime); // publishTime is the scheduled time for upcoming
-            return scheduledTime > now && scheduledTime <= upcomingCutoff;
+        allVideos.forEach(video => {
+            if (!video.snippet) {
+                console.warn("Video object missing snippet:", video);
+                return; // Skip malformed video objects
+            }
+
+            const title = video.snippet.title.toLowerCase();
+            const description = (video.snippet.description || "").toLowerCase(); // Ensure description exists
+
+            // Check for Live Videos
+            if (video.snippet.liveBroadcastContent === 'live') {
+                const isKeywordMatch = keywords.some(keyword => title.includes(keyword) || description.includes(keyword));
+                if (isKeywordMatch) {
+                    liveKeywordMatches.push(video);
+                } else {
+                    otherLiveStreams.push(video);
+                }
+            }
+            // Check for Upcoming Videos
+            else if (video.snippet.liveBroadcastContent === 'upcoming') {
+                if (video.liveStreamingDetails && video.liveStreamingDetails.scheduledStartTime) {
+                    const scheduledTime = new Date(video.liveStreamingDetails.scheduledStartTime);
+                    if (scheduledTime > now && scheduledTime <= upcomingCutoff) {
+                        upcomingStreams.push(video);
+                    }
+                }
+            }
         });
         
         // Sort upcoming videos by scheduled time (earliest first)
-        relevantUpcoming.sort((a, b) => new Date(a.snippet.publishTime) - new Date(b.snippet.publishTime));
+        upcomingStreams.sort((a, b) => new Date(a.liveStreamingDetails.scheduledStartTime) - new Date(b.liveStreamingDetails.scheduledStartTime));
 
-
-        displayVideos(keywordMatches, keywordLiveStreamsContainer, noKeywordLiveStreamsMsg, 'No keyword live streams.');
-        displayVideos(otherLive, otherLiveStreamsContainer, noOtherLiveStreamsMsg, 'No other live streams.');
-        displayVideos(relevantUpcoming, upcomingStreamsContainer, noUpcomingStreamsMsg, `No upcoming streams in the next ${upcomingHours} hours.`);
+        displayVideos(liveKeywordMatches, keywordLiveStreamsContainer, noKeywordLiveStreamsMsg, 'No keyword live streams.');
+        displayVideos(otherLiveStreams, otherLiveStreamsContainer, noOtherLiveStreamsMsg, 'No other live streams.');
+        displayVideos(upcomingStreams, upcomingStreamsContainer, noUpcomingStreamsMsg, `No upcoming streams in the next ${upcomingHours} hours.`);
     }
 
     function createVideoCard(video) {
-        const videoId = video.id.videoId;
+        // video.id is now an object like { kind: "youtube#video", videoId: "VIDEO_ID_HERE" } if coming from search
+        // or video.id is just the videoId string if coming from playlistItems then processed by videos.list
+        // The `getVideoDetails` function ensures `video.id` is the string ID.
+        const videoId = video.id; 
         const title = video.snippet.title;
-        const thumbnailUrl = video.snippet.thumbnails.medium ? video.snippet.thumbnails.medium.url : 'https://placehold.co/320x180/1f2937/374151?text=No+Thumbnail';
+        const thumbnailUrl = video.snippet.thumbnails && video.snippet.thumbnails.medium ? video.snippet.thumbnails.medium.url : 'https://placehold.co/320x180/1f2937/374151?text=No+Thumbnail';
         const channelTitle = video.snippet.channelTitle;
-        const publishedAt = new Date(video.snippet.publishTime);
+        
+        let statusText = '';
+        if (video.snippet.liveBroadcastContent === 'live') {
+            statusText = '<span class="text-red-400 font-bold">● LIVE</span>';
+        } else if (video.snippet.liveBroadcastContent === 'upcoming' && video.liveStreamingDetails && video.liveStreamingDetails.scheduledStartTime) {
+            statusText = `Scheduled: ${new Date(video.liveStreamingDetails.scheduledStartTime).toLocaleString()}`;
+        } else {
+                // Fallback for videos that might not be live/upcoming but were fetched
+            statusText = `Published: ${new Date(video.snippet.publishedAt).toLocaleDateString()}`;
+        }
+
 
         const card = document.createElement('div');
         card.className = 'video-card rounded-lg overflow-hidden shadow-lg flex flex-col';
@@ -242,7 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h3 class="text-md font-semibold text-gray-100 mb-1 leading-tight">${truncateText(title, 60)}</h3>
                 <p class="text-xs text-gray-400 mb-2">Channel: ${channelTitle}</p>
                 <p class="text-xs text-gray-500 mb-3">
-                    ${video.snippet.liveBroadcastContent === 'live' ? '<span class="text-red-400 font-bold">● LIVE</span>' : `Scheduled: ${publishedAt.toLocaleString()}`}
+                    ${statusText}
                 </p>
                 <button class="mt-auto watch-video-btn btn-secondary text-sm py-2 px-3 rounded-md w-full hover:bg-gray-600 transition-colors duration-150" data-video-id="${videoId}" data-video-title="${escapeHtml(title)}">Watch Stream</button>
             </div>
@@ -253,8 +305,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function escapeHtml(unsafe) {
+        if (typeof unsafe !== 'string') {
+            console.warn("escapeHtml called with non-string value:", unsafe);
+            return '';
+        }
         return unsafe
-                .replace(/&/g, "&amp;")
+                .replace(/&/g, "&amp;") // Must be first
                 .replace(/</g, "&lt;")
                 .replace(/>/g, "&gt;")
                 .replace(/"/g, "&quot;")
@@ -293,7 +349,6 @@ document.addEventListener('DOMContentLoaded', () => {
         errorDisplay.textContent = message;
         errorDisplay.classList.remove('hidden');
         loadingIndicator.classList.add('hidden');
-            // Optionally hide video sections on critical error
         videoSectionsContainer.classList.add('hidden');
     }
 
