@@ -15,6 +15,7 @@ const YOUTUBE_CONFIG = {
     'UCR6qhsLpn62WVxCBK1dkLow', // Enna Alouette【NIJISANJI EN】
     'UCngjNluk0InGM3RShD_J_cw', // ネモ・テルミナス Nemo Terminus
     'UC0HX1e5jJnhN5Xn0epV2wzA', // MEDA
+    'UCIf6cffSRZqS7TUXbUAK_hw', // Cygnus ch. 熙歌
   ],
 
   // Add keywords to look for in live stream titles or descriptions
