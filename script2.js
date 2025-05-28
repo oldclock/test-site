@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const description = (video.snippet.description || "").toLowerCase();
 
             if (video.snippet.liveBroadcastContent === 'live') {
-                const isKeywordMatch = keywords.some(keyword => title.includes(keyword) || description.includes(keyword));
+                const isKeywordMatch = keywords.some(keyword => title.includes(keyword));
                 if (isKeywordMatch) {
                     liveKeywordMatches.push(video);
                 } else {
