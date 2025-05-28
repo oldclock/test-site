@@ -16,19 +16,36 @@
             background-color: #1f2937; /* bg-gray-800 */
             border: 1px solid #374151; /* border-gray-700 */
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            /* Reduced size - adjust width/max-width as needed, or rely on grid cols */
+            /* Example: max-width: 280px; */
         }
         .video-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            transform: translateY(-3px); /* Slightly less lift for smaller cards */
+            box-shadow: 0 8px 12px -3px rgba(0,0,0,0.1), 0 3px 5px -2px rgba(0,0,0,0.05);
         }
         .video-thumbnail {
             aspect-ratio: 16 / 9;
             object-fit: cover;
+            cursor: pointer; /* Indicate clickable */
         }
+        .video-card-content { /* New class for content padding */
+            padding: 0.75rem; /* p-3, reduced from p-4 */
+        }
+        .video-card h3 {
+            font-size: 0.875rem; /* text-sm, reduced from text-md */
+            margin-bottom: 0.125rem; /* mb-0.5, reduced */
+        }
+        .video-card p {
+            font-size: 0.75rem; /* text-xs */
+            margin-bottom: 0.25rem; /* mb-1, reduced */
+        }
+
         .api-key-input {
             background-color: #374151; /* bg-gray-700 */
             color: #e5e7eb; /* text-gray-200 */
             border: 1px solid #4b5563; /* border-gray-600 */
+            font-size: 0.875rem; /* text-sm */
+            padding: 0.5rem 0.75rem; /* p-2 px-3 */
         }
         .api-key-input::placeholder {
             color: #9ca3af; /* text-gray-400 */
@@ -36,25 +53,22 @@
         .btn-primary {
             background-color: #3b82f6; /* bg-blue-600 */
             color: white;
+            font-size: 0.875rem; /* text-sm */
+            padding: 0.5rem 0.75rem; /* p-2 px-3 */
         }
         .btn-primary:hover {
             background-color: #2563eb; /* bg-blue-700 */
         }
-        .btn-secondary {
-            background-color: #4b5563; /* bg-gray-600 */
-            color: white;
-        }
-        .btn-secondary:hover {
-            background-color: #374151; /* bg-gray-700 */
-        }
+        /* .btn-secondary removed as "Watch Stream" button is gone */
+
         .loader {
-            border: 4px solid #4b5563; /* border-gray-600 */
-            border-top: 4px solid #3b82f6; /* border-blue-600 */
+            border: 3px solid #4b5563; /* border-gray-600 */
+            border-top: 3px solid #3b82f6; /* border-blue-600 */
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 30px; /* Reduced size */
+            height: 30px; /* Reduced size */
             animation: spin 1s linear infinite;
-            margin: 20px auto;
+            margin: 15px auto; /* Reduced margin */
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -62,8 +76,8 @@
         }
         /* Custom scrollbar for webkit browsers */
         ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+            width: 6px; /* Reduced scrollbar width */
+            height: 6px;
         }
         ::-webkit-scrollbar-track {
             background: #1f2937; /* bg-gray-800 */
@@ -76,127 +90,66 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #6b7280; /* bg-gray-500 */
         }
-        /* Modal styles */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 100; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
-        }
-        .modal-content {
-            background-color: #1f2937; /* bg-gray-800 */
-            margin: 10% auto; /* 10% from the top and centered */
-            padding: 24px;
-            border: 1px solid #374151; /* border-gray-700 */
-            width: 90%;
-            max-width: 500px;
-            border-radius: 8px;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3), 0 8px 10px -6px rgba(0,0,0,0.2);
-        }
-        .modal-header {
-            padding-bottom: 16px;
-            border-bottom: 1px solid #374151; /* border-gray-700 */
-        }
-        .modal-body {
-            padding-top: 16px;
-            padding-bottom: 16px;
-        }
-        .modal-footer {
-            padding-top: 16px;
-            border-top: 1px solid #374151; /* border-gray-700 */
-            text-align: right;
-        }
-        .close-button {
-            color: #9ca3af; /* text-gray-400 */
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .close-button:hover,
-        .close-button:focus {
-            color: #e5e7eb; /* text-gray-200 */
-            text-decoration: none;
-        }
+        /* Modal styles removed as modal is no longer used */
     </style>
 </head>
 <body class="min-h-screen">
-    <div class="container mx-auto p-4 md:p-8">
-        <header class="mb-8 text-center">
-            <h1 class="text-3xl md:text-4xl font-bold text-white">YouTube Live & Upcoming Streams</h1>
-            <p class="text-gray-400 mt-2">Browse live and scheduled streams from your favorite channels.</p>
+    <div class="container mx-auto p-2 sm:p-3 md:p-4">
+        <header class="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div class="flex-grow">
+                <h1 class="text-2xl md:text-3xl font-bold text-white">YouTube Live Streams</h1>
+                <p class="text-gray-400 text-sm mt-1">Live and scheduled streams.</p>
+            </div>
+            <div id="apiKeySection" class="p-3 rounded-lg shadow bg-gray-800 border border-gray-700 w-full sm:w-auto sm:max-w-xs md:max-w-sm flex-shrink-0">
+                <label for="apiKey" class="block text-sm font-medium text-gray-200 mb-1">API Key</label>
+                <div class="flex items-center gap-2">
+                    <input type="password" id="apiKey" class="api-key-input flex-grow rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500" placeholder="YouTube API Key">
+                    <button id="saveApiKey" class="btn-primary rounded-md font-semibold whitespace-nowrap">Load</button>
+                </div>
+                <p id="apiKeyStatus" class="text-xs mt-1.5"></p>
+                 <p class="text-xs text-gray-500 mt-1">
+                    Key stored in local storage. Get from
+                    <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer" class="text-blue-500 hover:text-blue-400 underline">GCloud Console</a>.
+                </p>
+            </div>
         </header>
 
-        <div id="apiKeySection" class="mb-8 p-6 rounded-lg shadow-lg bg-gray-800 border border-gray-700">
-            <label for="apiKey" class="block text-lg font-medium text-gray-200 mb-2">YouTube API Key</label>
-            <div class="flex flex-col sm:flex-row gap-3">
-                <input type="password" id="apiKey" class="api-key-input flex-grow p-3 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="Enter your YouTube Data API v3 Key">
-                <button id="saveApiKey" class="btn-primary p-3 rounded-md font-semibold whitespace-nowrap">Save & Load Streams</button>
-            </div>
-            <p class="text-sm text-gray-500 mt-3">
-                Your API key is stored locally in your browser's local storage and is not shared.
-                A YouTube Data API v3 key is required. You can obtain one from the
-                <a href="https://console.cloud.google.com/apis/credentials" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 underline">Google Cloud Console</a>.
-            </p>
-            <p id="apiKeyStatus" class="text-sm mt-2"></p>
-        </div>
 
-        <div id="loadingIndicator" class="hidden text-center my-10">
+        <div id="loadingIndicator" class="hidden text-center my-8">
             <div class="loader"></div>
-            <p class="text-lg text-gray-400">Fetching streams... Please wait.</p>
+            <p class="text-md text-gray-400">Fetching streams...</p>
         </div>
 
-        <div id="errorDisplay" class="hidden my-6 p-4 bg-red-700 border border-red-900 text-red-100 rounded-md">
+        <div id="errorDisplay" class="hidden my-4 p-3 bg-red-700 border border-red-900 text-red-100 rounded-md text-sm">
         </div>
 
         <div id="videoSectionsContainer" class="hidden">
-            <section id="keywordLiveStreamsSection" class="mb-12">
-                <h2 class="text-2xl font-semibold mb-6 text-white border-b-2 border-blue-500 pb-2">
-                    Singing Live Streams
+            <section id="keywordLiveStreamsSection" class="mb-8">
+                <h2 class="text-xl font-semibold mb-4 text-white border-b border-blue-500 pb-1.5">
+                    Featured Live (Keywords)
                 </h2>
-                <div id="keywordLiveStreams" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div id="keywordLiveStreams" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
                     </div>
-                <p id="noKeywordLiveStreams" class="text-gray-500 hidden">No live streams matching your keywords found at the moment.</p>
+                <p id="noKeywordLiveStreams" class="text-gray-500 hidden text-sm mt-3">No live streams matching your keywords found.</p>
             </section>
 
-            <section id="otherLiveStreamsSection" class="mb-12">
-                <h2 class="text-2xl font-semibold mb-6 text-white border-b-2 border-green-500 pb-2">
+            <section id="otherLiveStreamsSection" class="mb-8">
+                <h2 class="text-xl font-semibold mb-4 text-white border-b border-green-500 pb-1.5">
                     Other Live Streams
                 </h2>
-                <div id="otherLiveStreams" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div id="otherLiveStreams" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
                     </div>
-                <p id="noOtherLiveStreams" class="text-gray-500 hidden">No other live streams found at the moment.</p>
+                <p id="noOtherLiveStreams" class="text-gray-500 hidden text-sm mt-3">No other live streams found.</p>
             </section>
 
-            <section id="upcomingStreamsSection" class="mb-12">
-                <h2 class="text-2xl font-semibold mb-6 text-white border-b-2 border-purple-500 pb-2">
-                    Upcoming Streams (Next <span id="upcomingHours">48</span> Hours)
+            <section id="upcomingStreamsSection" class="mb-8">
+                <h2 class="text-xl font-semibold mb-4 text-white border-b border-purple-500 pb-1.5">
+                    Upcoming (Next <span id="upcomingHours">48</span> Hrs)
                 </h2>
-                <div id="upcomingStreams" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div id="upcomingStreams" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
                     </div>
-                <p id="noUpcomingStreams" class="text-gray-500 hidden">No upcoming streams found in the next <span class="upcomingHoursText">48</span> hours.</p>
+                <p id="noUpcomingStreams" class="text-gray-500 hidden text-sm mt-3">No upcoming streams in the next <span class="upcomingHoursText">48</span> hours.</p>
             </section>
-        </div>
-    </div>
-
-    <div id="videoPlayerModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="videoPlayerTitle" class="text-xl font-semibold text-white">Video Player</h3>
-                <span class="close-button" id="closeModalButton">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div id="youtubePlayerContainer" class="aspect-video">
-                    </div>
-            </div>
-             <div class="modal-footer">
-                <button id="closeModalFooterButton" class="btn-secondary px-4 py-2 rounded-md">Close</button>
-            </div>
         </div>
     </div>
 
