@@ -240,13 +240,12 @@ document.addEventListener('DOMContentLoaded', () => {
         card.className = 'video-card rounded-lg overflow-hidden shadow-lg flex flex-col cursor-pointer'; 
         card.innerHTML = `
             <img src="${thumbnailUrl}" alt="${escapeHtml(title)}" class="video-thumbnail w-full" onerror="this.onerror=null;this.src='https://placehold.co/320x180/1f2937/374151?text=Missing';" loading="lazy">
-            <div class="video-card-content flex flex-col flex-grow"> {/* Used new class for padding */}
+            <div class="video-card-content flex flex-col flex-grow">
                 <h3 class="font-semibold text-gray-100 leading-tight">${truncateText(title, 50)}</h3>
                 <p class="text-gray-400">Channel: ${channelTitle}</p>
-                <p class="text-gray-500 mt-auto pt-1"> {/* Pushed status to bottom */}
+                <p class="text-gray-500 mt-auto pt-1">
                     ${statusText}
                 </p>
-                {/* "Watch Stream" button removed */}
             </div>
         `;
         // Event listener for the whole card to open video in new tab
