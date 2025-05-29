@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let statusText = '';
         if (video.snippet.liveBroadcastContent === 'live') {
-            statusText = '<span class="text-red-400 font-bold">● LIVE</span>';
+            statusText = `<span class="text-red-400 font-bold">● LIVE</span> ${new Date(video.liveStreamingDetails.actualStartTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false })}`;
         } else if (video.snippet.liveBroadcastContent === 'upcoming' && video.liveStreamingDetails && video.liveStreamingDetails.scheduledStartTime) {
             statusText = `Scheduled: ${new Date(video.liveStreamingDetails.scheduledStartTime).toLocaleDateString([], {month: 'short', day: 'numeric'})} ${new Date(video.liveStreamingDetails.scheduledStartTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false })}`;
         } else {
