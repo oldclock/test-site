@@ -230,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (video.snippet.liveBroadcastContent === 'live') {
             statusText = '<span class="text-red-400 font-bold">● LIVE</span>';
         } else if (video.snippet.liveBroadcastContent === 'upcoming' && video.liveStreamingDetails && video.liveStreamingDetails.scheduledStartTime) {
-            statusText = `Scheduled: ${new Date(video.liveStreamingDetails.scheduledStartTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false })} ${new Date(video.liveStreamingDetails.scheduledStartTime).toLocaleDateString([], {month: 'short', day: 'numeric'})}`;
+            statusText = `Scheduled: ${new Date(video.liveStreamingDetails.scheduledStartTime).toLocaleDateString([], {month: 'short', day: 'numeric'})} ${new Date(video.liveStreamingDetails.scheduledStartTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: false })}`;
         } else {
             statusText = `Published: ${new Date(video.snippet.publishedAt).toLocaleDateString()}`;
         }
@@ -242,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <img src="${thumbnailUrl}" alt="${escapeHtml(title)}" class="video-thumbnail w-full" onerror="this.onerror=null;this.src='https://placehold.co/320x180/1f2937/374151?text=Missing';" loading="lazy">
             <div class="video-card-content flex flex-col flex-grow">
                 <h3 class="font-semibold text-gray-100 leading-tight">${truncateText(title, 50)}</h3>
-                <p class="text-gray-400">Channel: ${channelTitle}</p>
+                <p class="text-gray-400">${channelTitle}</p>
                 <p class="text-gray-500 mt-auto pt-1">
                     ${statusText}
                 </p>

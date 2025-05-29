@@ -58,6 +58,7 @@ const YOUTUBE_CONFIG = {
     "UCjKPgy9YPt16z8AFMi-TLeA", // MillionProduction # ゆらぎゆら / YuragiYura
     "UCWQGiZK_rAMpnl4awiUrqqg", // Ratio Yuires【Project:YuiRes】
     "UCX6x7k9z83gw7DQYfLNTOmw", // スイミー / Swimmy
+    "UCo7TRj3cS-f_1D9ZDmuTsjw", // NIJISANJI # 町田ちま【にじさんじ】
     "UCt30jJgChL8qeT9VPadidSw", // しぐれうい
     // T2 - EN/ID
     "UC_sFNM0z0MWm9A6WlKPuMMg", // Hololive # Nerissa Ravencroft Ch. hololive-EN
@@ -106,7 +107,6 @@ const YOUTUBE_CONFIG = {
     "UC6uZRWNuCa6XB4oRHApdtZw", // 女巫西亞Cya Channel
     // 'UCe_8qM8Wk4cU5oD3WO07gZg', // Shairu.chしゃいる
     // 'UCngjNluk0InGM3RShD_J_cw', // ネモ・テルミナス Nemo Terminus
-    // 'UCIf6cffSRZqS7TUXbUAK_hw', // Cygnus ch. 熙歌
   ],
 
   // Add keywords to look for in live stream titles or descriptions
