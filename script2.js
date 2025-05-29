@@ -242,10 +242,8 @@ document.addEventListener('DOMContentLoaded', () => {
             <img src="${thumbnailUrl}" alt="${escapeHtml(title)}" class="video-thumbnail w-full" onerror="this.onerror=null;this.src='https://placehold.co/320x180/1f2937/374151?text=Missing';" loading="lazy">
             <div class="video-card-content flex flex-col flex-grow">
                 <h3 class="font-semibold text-gray-100 leading-tight">${truncateText(title, 50)}</h3>
-                <p class="text-gray-400">${channelTitle}</p>
-                <p class="text-gray-500 mt-auto pt-1">
-                    ${statusText}
-                </p>
+                <p class="text-gray-400 mt-auto pt-1">${channelTitle}</p>
+                <p class="text-gray-500">${statusText}</p>
             </div>
         `;
         // Event listener for the whole card to open video in new tab
