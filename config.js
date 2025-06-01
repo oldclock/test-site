@@ -186,6 +186,8 @@ const YOUTUBE_CONFIG = {
     "UCrAsByHNIFObjr2sEaZHkCg", // Otsuka Ray ch.乙夏鈴
     "UC6bgvg7TfGxryVoaXEj8t9w", // 透華レミ Remi Touka
     "UC7YXqPO3eUnxbJ6rN0z2z1Q", // DELUTAYA Δ.
+    "UCO4blswUnk1SHD1VmFXzB0A", // Aromaの音楽
+    "UCONtwJdE7A68l1eCjf8k4jQ", // 儚牙紺 - Kurage Kon -
     // T3 - ZH
     "UCYRUl2H0hBmazctTbGrVDvQ", // 杜邊優妮 DBUni ch.【ドビアン・ヨウニ】
     "UCv_W2ZpvfrLAzsHqtjWGKYw", // 秋芽·ChillYa ch.
@@ -207,17 +209,17 @@ const YOUTUBE_CONFIG = {
     "UCewRhO43UmIohSBzW2HMheA", // 凪乃ましろ / Nagino Mashiro
     "UCOW-2NSrcfU6K9BEhbzR9Vw", // 九九 | ichijiku Q (歌Ch.)
     "UCUuGWyIp8GqDrdmJxJwz3dA", // Miagolare ch. -みゃごらーれ-
-    "UCO4blswUnk1SHD1VmFXzB0A", // Aromaの音楽
     "UCMCooZqVMD2ZmUxjRxGuUjg", // 花鹿 める / Kajica Mel
     "UCLOnKw76ypBM5PeYr4OdkJQ", // Sakura CH.餅々さくら
     "UCy6Fu_0fDzQ7H-UWZFENklQ", // えるるん / Erurun Channel
     "UC5CH4FvzJO5pYmhty_vmePA", // 四葉メロンch
   ],
 
-  // Add keywords to look for in live stream titles or descriptions
+  // Add keywords to look for in live stream titles
   keywords: [
     "歌回",
     "歌枠",
+    "弾き語り",
     "歌雜",
     "唱歌",
     "練歌",
@@ -228,6 +230,7 @@ const YOUTUBE_CONFIG = {
     "singing",
     "karaoke",
     "music",
+    "acoustic",
     "graduation",
     // Add more relevant keywords
   ],
